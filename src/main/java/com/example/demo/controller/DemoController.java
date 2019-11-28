@@ -31,7 +31,7 @@ public class DemoController {
 
     @RequestMapping("/test")
     @ResponseBody
-    @LoginRequired
+    //@LoginRequired
     public ResultVO test(){
 
         Map data =new HashMap();

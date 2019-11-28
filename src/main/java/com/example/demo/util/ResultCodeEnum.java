@@ -8,7 +8,7 @@ public enum ResultCodeEnum {
 
     SUCCESS(0,"success"),
 
-    CUSTOM_PROMPT(1,"自定"),
+    ERROR(1,"自定"),
 
     SESSIONINVALID(2,"登录失效,请重新授权登录");
 
