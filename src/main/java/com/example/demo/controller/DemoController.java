@@ -1,15 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.aop.LoginRequired;
-import com.example.demo.dto.User;
+
 import com.example.demo.service.DemoService;
 import com.example.demo.util.ResultVO;
-import com.example.demo.util.SignOauthUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -41,6 +38,20 @@ public class DemoController {
 
 
         return  new ResultVO.ResultVoBuilder<String>().code(0).msg("登录成功").result("你好吗").builder();
+    }
+
+    /**
+     * 跳转到指定页面
+     * @Author zhangzhiqiang1
+     * @Date  2020/4/8 17:21
+     * @Param []
+     * @return org.springframework.web.servlet.ModelAndView
+     **/
+    @RequestMapping("/toUserPage")
+    public ModelAndView toUserPage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/user/user");
+        return modelAndView;
     }
 
 

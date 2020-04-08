@@ -1,11 +1,8 @@
 package com.example.demo.aop;
 
-/**
- * @Description
- * @Author zhangzhiqiang1
- * @Date 2019/11/7 17:53
- * @Version 1.0
- **/
+
+import com.alibaba.fastjson.JSON;
+import com.example.demo.enums.ResultCodeEnum;
 import com.example.demo.util.ResultVO;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -16,11 +13,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.junit.platform.commons.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -60,15 +53,10 @@ public class ControllerInterceptor {
      */
     @Around("controllerMethodPointcut()") //指定拦截器规则；也可以直接把“execution(* com.xjj.........)”写进这里
     public Object Interceptor(ProceedingJoinPoint pjp) {
-       // long beginTime = System.currentTimeMillis();
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
-        Method method = signature.getMethod(); //获取被拦截的方法
-        //String methodName = method.getName(); //获取被拦截的方法名
+        logger.info("start ControllerInterceptor,controller:{},method:{},params:{},value:{}", pjp.getSignature().getDeclaringTypeName(),((MethodSignature) pjp.getSignature()).getMethod().getName(),((MethodSignature) pjp.getSignature()).getParameterNames(), JSON.toJSONString(pjp.getArgs()));
 
-        RequestAttributes ra = RequestContextHolder.getRequestAttributes();
-        ServletRequestAttributes sra = (ServletRequestAttributes) ra;
-        HttpServletRequest request = sra.getRequest();
-
+        Method method =((MethodSignature) pjp.getSignature()).getMethod();
+        HttpServletRequest request =((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         Object result = null;
 
         if (isLoginRequired(method)) {
@@ -81,10 +69,12 @@ public class ControllerInterceptor {
             try {
                 result = pjp.proceed();
             } catch (Throwable throwable) {
-                throwable.printStackTrace();
-                //result = ResultVO.error(throwable.getMessage());
+                logger.error("exception ControllerInterceptor,controller:{},method:{},ex:{}", pjp.getSignature().getDeclaringTypeName(),((MethodSignature) pjp.getSignature()).getMethod().getName(), throwable);
+                result = new ResultVO(ResultCodeEnum.INTERNAL_SERVER_ERROR.getCode(), ResultCodeEnum.INTERNAL_SERVER_ERROR.getMsg(),throwable.getMessage());
             }
         }
+        logger.info("end ControllerInterceptor,controller:{},method:{},result:{}", pjp.getSignature().getDeclaringTypeName(),((MethodSignature) pjp.getSignature()).getMethod().getName(), JSON.toJSONString(result));
+
         return result;
     }
 

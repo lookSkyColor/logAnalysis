@@ -22,5 +22,16 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
+  freemarker:
+    cache: false #为了热加载
+    charset: utf-8
+    content-type: text/html
+    enabled: true
+    settings:
+      number_format: '0'
+    template-loader-path: classpath:/templates
+  mvc:
+    static-path-pattern: /static/**,/customerimages/**;/html/*
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
+
